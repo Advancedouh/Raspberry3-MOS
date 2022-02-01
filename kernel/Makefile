@@ -1,4 +1,9 @@
+# Makefile for kernel module
+#
+# Written by ChenJiYuan GuoYanPei
+
 INCLUDES := -I../include
+
 %.o: %.S
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<
 
@@ -7,12 +12,19 @@ INCLUDES := -I../include
 
 .PHONY: clean 
 
-all: main.o exception.o time.o irq_init.o exception_handler.o env.o env_asm.o kernel_elfloader.o \
-	sched.o syscall_all.o
+all: main.o \
+     exception.o \
+     time.o \
+     irq_init.o \
+     exception_handler.o \
+     env.o \
+     env_asm.o \
+     kernel_elfloader.o \
+	 sched.o \
+	 syscall_all.o
 
 clean:
 	rm -rf *~ *.o
-
 
 include ../include.mk
 

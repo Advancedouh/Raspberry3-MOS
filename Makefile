@@ -16,18 +16,19 @@ fs_dir		  := fs
 kernel_elf	  := qemu/kernel.elf
 kernel_img	  := qemu/kernel.img
 
-link_script   := $(tools_dir)/link.ld
+link_script   := $(tools_dir)/qemu.ld
+# link_script   := $(tools_dir)/raspi3.ld
 
 modules		  := boot drivers kernel lib mm user fs
-objects		  := $(boot_dir)/*.o			  \
-				 $(kernel_dir)/*.o			  \
+objects		  := $(boot_dir)/*.o \
+				 $(kernel_dir)/*.o \
 			   	 $(drivers_dir)/gxconsole/console.o \
-				 $(lib_dir)/*.o				  \
-				 $(mm_dir)/*.o				  \
-				 $(user_dir)/*.x			  \
+				 $(lib_dir)/*.o \
+				 $(mm_dir)/*.o \
+				 $(user_dir)/*.x \
 				 $(fs_dir)/*.x
 
-.PHONY: all $(modules) clean
+.PHONY: all $(modules) build clean
 
 all: $(modules) build
 
@@ -63,5 +64,5 @@ asm: clean all
 
 decompile: clean all
 	$(OBJDUMP) -D qemu/kernel.elf >qemu/kernel.txt
-	
+
 include include.mk

@@ -25,13 +25,10 @@ void printf(char *fmt, ...)
 void
 _panic(const char *file, int line, const char *fmt,...) {
     __builtin_va_list ap;
-
-
     __builtin_va_start(ap, fmt);
     printf("panic at %s:%d: ", file, line);
     lp_Print(myoutput, 0, (char *)fmt, ap);
     printf("\n");
     __builtin_va_end(ap);
-	
-    for(;;);
+    for(;;); //dead loop
 }

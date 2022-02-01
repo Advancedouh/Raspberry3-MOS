@@ -1,4 +1,8 @@
-INCLUDES = -I../include/ 
+# Makefile for file system module
+#
+# Written by ChenJiYuan GuoYanPei
+
+INCLUDES = -I../include/
 
 user_dir := ../user
 
@@ -33,6 +37,8 @@ USERAPPS := $(user_dir)/init.b \
 
 FSIMGFILES := motd newmotd $(USERAPPS)
 
+FSIMG      := ../qemu/fs.img
+
 all: fs.img sdtest.x serv.x
 
 %.x: %.b.c
@@ -45,10 +51,10 @@ all: fs.img sdtest.x serv.x
 	chmod +x ./bintoc
 	./bintoc $* $< > $@~ && mv -f $@~ $@
 	
-%.b: ../user/entry.o ../user/syscall_wrap.o %.o $(USERLIB) $(FSLIB)
+%.b: ../user/entry.o %.o $(USERLIB) $(FSLIB)
 	echo ld $@
 	$(LD) -o $@ $(LDFLAGS) -G 0 -static -n -nostdlib -T ../user/user.ld $^
-	aarch64-none-elf-objdump -D $@ >$@.txt
+	$(OBJDUMP) -D $@ >$@.txt
 
 %.o: %.c
 	echo user1 cc $<
@@ -61,10 +67,11 @@ all: fs.img sdtest.x serv.x
 %.o: $(user_dir)/lib.h
 
 fs.img: $(FSIMGFILES)
-	dd if=/dev/zero of=../qemu/fs.img bs=4096 count=1024 2>/dev/null
+	dd if=/dev/zero of=$(FSIMG) bs=4096 count=1024 2>/dev/null
 	gcc fsformat.c -o fsformat -m64
 	chmod +x fsformat
-	./fsformat ../qemu/fs.img $(FSIMGFILES) >debug.txt
+	./fsformat $(FSIMG) $(FSIMGFILES) >fs_debug.txt
+	# ./fsformat $(FSIMG) $(FSIMGFILES)
 
 .PHONY: clean
 

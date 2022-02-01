@@ -1,4 +1,8 @@
-INCLUDES = -I../include/
+# Makefile for user module
+#
+# Written by ChenJiYuan GuoYanPei
+
+INCLUDES = -I./ -I../include/
 
 USERLIB := libos.o \
 		   syscall_lib.o \
@@ -27,7 +31,19 @@ USERAPP := init.b \
 		   mkdir.b \
 		   echo.b
 
-all: idle1.x idle2.x pingpong.x pingpong1.x pingpong2.x fktest.x fstest.x testpipe.x testpiperace.x icode.x $(USERAPP) $(USERLIB) entry.o
+all: idle1.x \
+     idle2.x \
+     pingpong.x \
+     pingpong1.x \
+     pingpong2.x \
+     fktest.x \
+     fstest.x \
+     testpipe.x \
+     testpiperace.x \
+     icode.x \
+     $(USERAPP) \
+     $(USERLIB) \
+     entry.o
 
 %.x: %.b.c
 	echo cc1 $<
@@ -38,11 +54,11 @@ all: idle1.x idle2.x pingpong.x pingpong1.x pingpong2.x fktest.x fstest.x testpi
 	echo bintoc $* $< > $@~
 	chmod +x ./bintoc
 	./bintoc $* $< > $@~ && mv -f $@~ $@
-	
+
 %.b: entry.o %.o $(USERLIB)
 	echo ld $@
 	$(LD) -o $@ $(LDFLAGS) -G 0 -static -n -nostdlib -T user.ld $^
-	aarch64-none-elf-objdump -D $@ >$@.txt
+	$(OBJDUMP) -D $@ >$@.txt
 
 %.o: %.c
 	echo user1 cc $<

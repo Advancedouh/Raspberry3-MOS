@@ -1,4 +1,8 @@
-INCLUDES 	  := -I./ -I../ -I../include/
+# Makefile for library module
+#
+# Written by ChenJiYuan GuoYanPei
+
+INCLUDES 	  := -I./ -I../include/
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<

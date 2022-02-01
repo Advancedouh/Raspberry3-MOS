@@ -1,13 +1,8 @@
-# Main makefile
+# Makefile for boot module
 #
 # Written by ChenJiYuan GuoYanPei
-#
-
-# ========= Configuration =========
 
 INCLUDES	  := -I../include/
-
-# ======== End of configuration ===
 
 %.o: %.S
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< 
