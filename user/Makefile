@@ -5,31 +5,31 @@
 INCLUDES = -I./ -I../include/
 
 USERLIB := libos.o \
-		   syscall_lib.o \
-		   syscall_wrap.o \
-		   writef.o \
-		   ipc.o \
-		   fork.o \
-		   pgfault.o \
-		   string.o \
-		   pageref.o \
-		   fd.o \
-		   file.o \
-		   fsipc.o \
-		   pipe.o \
-		   wait.o \
-		   spawn.o \
-		   console.o \
-		   fprintf.o \
-		   cursor.o
+           syscall_lib.o \
+           syscall_wrap.o \
+           writef.o \
+           ipc.o \
+           fork.o \
+           pgfault.o \
+           string.o \
+           pageref.o \
+           fd.o \
+           file.o \
+           fsipc.o \
+           pipe.o \
+           wait.o \
+           spawn.o \
+           console.o \
+           fprintf.o \
+           cursor.o
 
 USERAPP := init.b \
-		   sh.b \
-		   cat.b \
-		   ls.b \
-		   touch.b \
-		   mkdir.b \
-		   echo.b
+           sh.b \
+           cat.b \
+           ls.b \
+           touch.b \
+           mkdir.b \
+           echo.b
 
 all: idle1.x \
      idle2.x \
