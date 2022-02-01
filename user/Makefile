@@ -31,19 +31,9 @@ USERAPP := init.b \
            mkdir.b \
            echo.b
 
-all: idle1.x \
-     idle2.x \
-     pingpong.x \
-     pingpong1.x \
-     pingpong2.x \
-     fktest.x \
-     fstest.x \
-     testpipe.x \
-     testpiperace.x \
-     icode.x \
-     $(USERAPP) \
-     $(USERLIB) \
-     entry.o
+all: idle1.x idle2.x pingpong.x pingpong1.x pingpong2.x \
+     fktest.x fstest.x testpipe.x testpiperace.x icode.x \
+     $(USERAPP) $(USERLIB) entry.o
 
 %.x: %.b.c
 	echo cc1 $<
