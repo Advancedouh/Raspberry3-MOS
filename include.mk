@@ -3,8 +3,11 @@
 # Written By ChenJiYuan GuoYanPei
 
 vmlinux_img   := qemu/kernel8.img
-CROSS_COMPILE :=  aarch64-elf-
+# CROSS_COMPILE := aarch64-elf-
+CROSS_COMPILE := aarch64-none-elf-
 CC			  := $(CROSS_COMPILE)gcc
-CFLAGS		  := -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
+CFLAGS		  := -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles -mcmodel=large
 LD			  := $(CROSS_COMPILE)ld
+LDFLAGS       :=
 OBJCOPY		  := $(CROSS_COMPILE)objcopy
+OBJDUMP       := $(CROSS_COMPILE)objdump

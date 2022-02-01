@@ -42,7 +42,7 @@ all: idle1.x idle2.x pingpong.x pingpong1.x pingpong2.x fktest.x fstest.x testpi
 %.b: entry.o %.o $(USERLIB)
 	echo ld $@
 	$(LD) -o $@ $(LDFLAGS) -G 0 -static -n -nostdlib -T user.ld $^
-	aarch64-elf-objdump -D $@ >$@.txt
+	aarch64-none-elf-objdump -D $@ >$@.txt
 
 %.o: %.c
 	echo user1 cc $<

@@ -1,7 +1,9 @@
 # Main makefile
 #
 # Written by ChenJiYuan GuoYanPei
-#
+
+QEMU          := qemu-system-aarch64
+GDB           := gdb-multiarch
 
 drivers_dir	  := drivers
 boot_dir	  := boot
@@ -11,8 +13,8 @@ tools_dir	  := tools
 user_dir      := user
 mm_dir		  := mm
 fs_dir		  := fs
-vmlinux_elf	  := qemu/kernel8.elf
-vmlinux_img	  := qemu/kernel8.img
+kernel_elf	  := qemu/kernel.elf
+kernel_img	  := qemu/kernel.img
 
 link_script   := $(tools_dir)/link.ld
 
@@ -27,11 +29,11 @@ objects		  := $(boot_dir)/*.o			  \
 
 .PHONY: all $(modules) clean
 
-all: $(modules) kernel8
+all: $(modules) build
 
-kernel8: $(modules)
-	$(LD) -nostdlib -nostartfiles $(objects) -T $(link_script) -o $(vmlinux_elf)
-	$(OBJCOPY) -O binary $(vmlinux_elf) $(vmlinux_img)
+build: $(modules)
+	$(LD) -nostdlib $(objects) -T $(link_script) -o $(kernel_elf)
+	$(OBJCOPY) -O binary $(kernel_elf) $(kernel_img)
 
 $(modules): 
 	$(MAKE) --directory=$@
@@ -41,24 +43,25 @@ clean:
 		do					\
 			$(MAKE) --directory=$$d clean; \
 		done; \
-	rm -rf *.o *~ $(vmlinux_elf)
+	rm -rf *.o *~ $(kernel_elf)
+	cd ./qemu && rm -rf *.img *.txt *.elf && cd ..
 
 gdb:
 	gdb-multiarch -n -x .gdbinit
 
-qemu-gdb: $(vmlinux_img)
-	qemu-system-aarch64 -nographic $(QEMUOPTS) -S
+qemu-gdb: $(kernel_img)
+	$(QEMU) -nographic $(QEMUOPTS) -S
 
 run: clean all
-	qemu-system-aarch64 -M raspi3 -kernel $(vmlinux_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio
+	$(QEMU) -M raspi3 -kernel $(kernel_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio
 
-debug: clean all
-	qemu-system-aarch64 -M raspi3 -kernel $(vmlinux_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio -d int
+int: clean all
+	$(QEMU) -M raspi3 -kernel $(kernel_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio -d int
 
 asm: clean all
-	qemu-system-aarch64 -M raspi3 -kernel $(vmlinux_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio -d in_asm
+	$(QEMU) -M raspi3 -kernel $(kernel_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio -d in_asm
 
 decompile: clean all
-	aarch64-elf-objdump -D qemu/kernel8.elf >qemu/kernel.txt
+	$(OBJDUMP) -D qemu/kernel.elf >qemu/kernel.txt
 	
 include include.mk

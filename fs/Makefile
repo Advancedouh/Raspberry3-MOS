@@ -48,7 +48,7 @@ all: fs.img sdtest.x serv.x
 %.b: ../user/entry.o ../user/syscall_wrap.o %.o $(USERLIB) $(FSLIB)
 	echo ld $@
 	$(LD) -o $@ $(LDFLAGS) -G 0 -static -n -nostdlib -T ../user/user.ld $^
-	aarch64-elf-objdump -D $@ >$@.txt
+	aarch64-none-elf-objdump -D $@ >$@.txt
 
 %.o: %.c
 	echo user1 cc $<
