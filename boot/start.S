@@ -1,4 +1,4 @@
-.section ".text.boot"
+.section ".boot"
 
 .global _start
 
