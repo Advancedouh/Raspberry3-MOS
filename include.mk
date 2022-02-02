@@ -2,7 +2,6 @@
 #
 # Written By ChenJiYuan GuoYanPei
 
-vmlinux_img   := qemu/kernel8.img
 # CROSS_COMPILE := aarch64-elf-
 CROSS_COMPILE := aarch64-none-elf-
 CC			  := $(CROSS_COMPILE)gcc
