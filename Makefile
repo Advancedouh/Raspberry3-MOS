@@ -28,6 +28,9 @@ objects		  := $(boot_dir)/*.o \
 				 $(user_dir)/*.x \
 				 $(fs_dir)/*.x
 
+#QEMUOPTS      := -serial stdio
+QEMUOPTS      := -drive file=qemu/fs.img,if=sd,format=raw -serial stdio
+
 .PHONY: all $(modules) build clean
 
 all: $(modules) build
@@ -47,20 +50,20 @@ clean:
 	rm -rf *.o *~ $(kernel_elf)
 	cd ./qemu && rm -rf *.img *.txt *.elf && cd ..
 
-gdb:
-	gdb-multiarch -n -x .gdbinit
+gdb: $(kernel_img)
+	gdb-multiarch $(kernel_img)
 
 qemu-gdb: $(kernel_img)
-	$(QEMU) -nographic $(QEMUOPTS) -S
+	$(QEMU) -M raspi3 -kernel $(kernel_img) -nographic -drive file=qemu/fs.img,if=sd,format=raw -s -S
 
 run: clean all
-	$(QEMU) -M raspi3 -kernel $(kernel_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio
+	$(QEMU) -M raspi3 -kernel $(kernel_img) $(QEMUOPTS)
 
 int: clean all
-	$(QEMU) -M raspi3 -kernel $(kernel_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio -d int
+	$(QEMU) -M raspi3 -kernel $(kernel_img) $(QEMUOPTS) -d int
 
 asm: clean all
-	$(QEMU) -M raspi3 -kernel $(kernel_img) -drive file=qemu/fs.img,if=sd,format=raw -serial stdio -d in_asm
+	$(QEMU) -M raspi3 -kernel $(kernel_img) $(QEMUOPTS) -d in_asm
 
 decompile: clean all
 	$(OBJDUMP) -D qemu/kernel.elf >qemu/kernel.txt
