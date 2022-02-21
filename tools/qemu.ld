@@ -9,9 +9,7 @@ SECTIONS {
 
     .init : { 
         KEEP(*(.boot))
-        boot/main.o
-		boot/init.o
-		boot/tools.o
+        boot/*.o
 	}
 
     . = ALIGN(1 << 21);

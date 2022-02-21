@@ -1,5 +1,6 @@
 #include<printf.h>
 #include<image.h>
+#include<uart.h>
 
 int main() {
 

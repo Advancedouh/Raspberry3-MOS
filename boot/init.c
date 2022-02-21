@@ -1,49 +1,5 @@
-#include<pi.h>
 #include<image.h>
 #include<pmap.h>
-
-void uart_init()
-{
-    register unsigned int r;
-
-    // initialize UART
-    *UART0_CR = 0;         // turn off UART0
-
-    // map UART0 to GPIO pins
-    r=*GPFSEL1;
-    r&=~((7<<12)|(7<<15)); // gpio14, gpio15
-    r|=(4<<12)|(4<<15);    // alt0
-    *GPFSEL1 = r;
-    *GPPUD = 0;            // enable pins 14 and 15
-    r=150; while(r--) { asm volatile("nop"); }
-    *GPPUDCLK0 = (1<<14)|(1<<15);
-    r=150; while(r--) { asm volatile("nop"); }
-    *GPPUDCLK0 = 0;        // flush GPIO setup
-
-    *UART0_ICR = 0x7FF;    // clear interrupts
-    *UART0_IBRD = 2;       // 115200 baud
-    *UART0_FBRD = 0xB;
-    *UART0_LCRH = 0b11<<5; // 8n1
-    *UART0_CR = 0x301;     // enable Tx, Rx, FIFO
-}
-
-void uart_send(unsigned int c) {
-    // wait until we can send
-    do{asm volatile("nop");}while(*UART0_FR&0x20);
-    // write the character to the buffer
-    *UART0_DR=c;
-}
-
-void uart_puts(char *s) {
-    while(*s) {
-        // convert newline to carrige return + newline
-        if(*s=='\n')
-            uart_send('\r');
-        uart_send(*s++);
-    }
-}
-
-void extern el1_mmu_activate(void);
 
 typedef unsigned long u64;
 typedef unsigned int u32;

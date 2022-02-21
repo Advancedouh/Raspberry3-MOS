@@ -37,7 +37,7 @@ USERAPPS := $(user_dir)/init.b \
 
 FSIMGFILES := motd newmotd $(USERAPPS)
 
-FSIMG      := ../qemu/fs.img
+FSIMG      := ../target/fs.img
 
 all: fs.img sdtest.x serv.x
 

@@ -9,19 +9,18 @@ char buf[256];
 void kernel_main() {
     printf("[KERNEL]init.c:\taarch64_init() is called\n");
 
+    while(1) {
+    }
+
+    /*
 	memory_management_test();
 	
 	env_init();
 	syscall_init();
 
 	sd_init();
-	/*sd_readblock(0,buf,1);
 
-	for (int i = 0; i < 256; ++ i)
-		buf[i] = (buf[i] == 0 ? 0 : buf[i] + 1);
-	printf("%lx\n", sd_writeblock(buf, 0, 1));*/
-
-	//ENV_CREATE(fs_serv);
+	ENV_CREATE(fs_serv);
 	//ENV_CREATE(user_fstest);
 	//ENV_CREATE(user_testpipe);
 	//ENV_CREATE(user_testpiperace);
@@ -33,7 +32,8 @@ void kernel_main() {
 	//ENV_CREATE(user_idle2);
 	ENV_CREATE(user_icode);
 
-	irq_init();*/
+	irq_init();
+     */
 }
 
 void bcopy(const void *src, void *dst, int len)

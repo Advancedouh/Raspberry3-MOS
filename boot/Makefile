@@ -12,7 +12,7 @@ INCLUDES	  := -I../include/
 
 .PHONY: clean
 
-all: start.o tools.o init.o main.o
+all: start.o tools.o init.o main.o uart.o mailbox.o
 
 clean:
 	rm -rf *~ *.o
