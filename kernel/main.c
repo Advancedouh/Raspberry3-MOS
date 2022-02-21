@@ -21,7 +21,7 @@ void kernel_main() {
 		buf[i] = (buf[i] == 0 ? 0 : buf[i] + 1);
 	printf("%lx\n", sd_writeblock(buf, 0, 1));*/
 
-	ENV_CREATE(fs_serv);
+	//ENV_CREATE(fs_serv);
 	//ENV_CREATE(user_fstest);
 	//ENV_CREATE(user_testpipe);
 	//ENV_CREATE(user_testpiperace);
@@ -33,7 +33,7 @@ void kernel_main() {
 	//ENV_CREATE(user_idle2);
 	ENV_CREATE(user_icode);
 
-	irq_init();
+	irq_init();*/
 }
 
 void bcopy(const void *src, void *dst, int len)
