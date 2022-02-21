@@ -4,7 +4,7 @@
 .extern boot_ttbr0_l0
 .extern boot_ttbr1_l0
 
-#define MAIR_NUM					(0x448804)
+#define MAIR_NUM					(0x440488)
 #define SCR_NUM						(0x30d51825)
 #define TCR_NUM						(0x603a193a19)
 
