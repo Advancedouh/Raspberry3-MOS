@@ -10,8 +10,11 @@ static void user_myoutput(void *arg, char *s, int l)
     if ((l==1) && (s[0] == '\0'))
         return;
 
-    for (i=0; i< l; i++)
+    for (i=0; i< l; i++) {
+        if (s[i] == '\n')
+            syscall_putchar('\r');
         syscall_putchar(s[i]);
+    }
 }
 
 void writef(char *fmt, ...)

@@ -112,7 +112,9 @@ int page_insert(u64 *pgdir, struct Page *pp, u64 va, u64 perm) {
 		return -1;
 	}
 
-	*pgtable_entry = pp->pa | PERM;
+    *pgtable_entry = pp->pa | PERM;
+    asm volatile ("dsb sy");
+    asm volatile ("isb");
 	pp->ref++;
 
 	return 0;
@@ -169,13 +171,17 @@ void memory_management_test() {
     int *j = 1ll << 35;
 	u64* ppte;
 	*((int*)KADDR(PTE_ADDR((Kern_pages[60000].pa)))) = 19260817;
+    int *tmp = KADDR(60000ul << 12);
+    printf("%d %d\n", *tmp, Kern_pages[60000].pa);
+    page_insert(User_pgdir, Kern_pages + 60000, j, 0);
+    //flush_tlb();
+    printf("the number is: %d\n", (*j));
+    assert((*j) == 19260817);
+    printf("should be 19260817 ok!\n");
 	page_insert(User_pgdir, Kern_pages + 50000, j, 0);
 	*j = 10000;
     assert((*j) == 10000);
 	printf("should be 10000 ok!\n");
-	page_insert(User_pgdir, Kern_pages + 60000, j, 0);
-	assert((*j) == 19260817);
-    printf("should be 19260817 ok!\n");
 	page_insert(User_pgdir, Kern_pages + 50000, j, 0);
 	assert((*j) == 10000);
     printf("should be 10000 ok!\n");
@@ -195,6 +201,7 @@ void memory_management_test() {
         assert((Kern_vis[ppn>>6]&(1ll<<(ppn&63)))==0);
     }*/
     printf("[KERNEL]memory_management_test succeed!\n");
+    panic("");
 }
 
 extern struct Env *curenv;

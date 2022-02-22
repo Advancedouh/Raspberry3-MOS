@@ -12,18 +12,18 @@ void umain()
 			if ((id = fork()) == 0) {
 				a += 4;
 				for (;;) {
-					writef("\t\t\tthis is child3 :a:%d\n", a);
+					writef("   this is child3 :a:%d\n", a);
 				}
 			}
 			for (;;) {
-				writef("\t\tthis is child2 :a:%d\n", a);
+				writef("  this is child2 :a:%d\n", a);
 			}
 		}
 
 		a += 2;
 
 		for (;;) {
-			writef("\tthis is child :a:%d\n", a);
+			writef(" this is child :a:%d\n", a);
 		}
 	}
 

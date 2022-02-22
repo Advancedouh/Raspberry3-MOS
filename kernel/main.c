@@ -7,24 +7,21 @@ extern void syscall_init();
 
 char buf[256];
 void kernel_main() {
-    printf("[KERNEL]init.c:\taarch64_init() is called\n");
+    printf("[KERNEL]init.c:aarch64_init() is called\n");
 
-    while(1) {
-    }
 
-    /*
 	memory_management_test();
 	
 	env_init();
 	syscall_init();
 
-	sd_init();
+	//sd_init();
 
-	ENV_CREATE(fs_serv);
+	//ENV_CREATE(fs_serv);
 	//ENV_CREATE(user_fstest);
 	//ENV_CREATE(user_testpipe);
 	//ENV_CREATE(user_testpiperace);
-	//ENV_CREATE(user_fktest);
+	ENV_CREATE(user_fktest);
 	//ENV_CREATE(user_pingpong);
 	//ENV_CREATE(user_pingpong1);
 	//ENV_CREATE(user_pingpong2);
@@ -33,7 +30,6 @@ void kernel_main() {
 	ENV_CREATE(user_icode);
 
 	irq_init();
-     */
 }
 
 void bcopy(const void *src, void *dst, int len)
