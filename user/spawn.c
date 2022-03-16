@@ -138,6 +138,8 @@ error:
 }
 
 int usr_is_elf_format(u8 *binary) {
+    writef("%x %x %x %x", *binary, *(binary+1), *(binary+2), *(binary+3));
+//    user_panic("error");
     return 1;
 }
 

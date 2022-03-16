@@ -201,7 +201,7 @@ void memory_management_test() {
         assert((Kern_vis[ppn>>6]&(1ll<<(ppn&63)))==0);
     }*/
     printf("[KERNEL]memory_management_test succeed!\n");
-    panic("");
+    //panic("");
 }
 
 extern struct Env *curenv;

@@ -39,7 +39,7 @@ FSIMGFILES := motd newmotd $(USERAPPS)
 
 FSIMG      := ../target/fs.img
 
-all: fs.img sdtest.x serv.x
+all: sdtest.x serv.x
 
 %.x: %.b.c
 	echo cc1 $<
@@ -66,12 +66,13 @@ all: fs.img sdtest.x serv.x
 
 %.o: $(user_dir)/lib.h
 
-fs.img: $(FSIMGFILES)
+image: $(FSIMGFILES)
 	dd if=/dev/zero of=$(FSIMG) bs=4096 count=1024 2>/dev/null
 	gcc fsformat.c -o fsformat -m64
 	chmod +x fsformat
 	./fsformat $(FSIMG) $(FSIMGFILES) >fs_debug.txt
 	# ./fsformat $(FSIMG) $(FSIMGFILES)
+	sudo dd if=$(FSIMG) of=/dev/sdb1 bs=512 skip=0 seek=3000000
 
 .PHONY: clean
 

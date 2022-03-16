@@ -131,16 +131,22 @@ int sd_status(unsigned int mask)
     return (cnt <= 0 || (*EMMC_INTERRUPT & INT_ERROR_MASK)) ? SD_ERROR : SD_OK;
 }
 
+extern void cache_clean_invalidate_d(u64, u64);
 /**
  * Wait for interrupt
  */
 int sd_int(unsigned int mask)
 {
     unsigned int r, m=mask | INT_ERROR_MASK;
-    int cnt = 1000000; while(!(*EMMC_INTERRUPT & m) && cnt--) wait_msec(1);
+    int cnt = 1000000; while(!(*EMMC_INTERRUPT & m) && cnt--) {
+        wait_msec(1);
+        cache_clean_invalidate_d(EMMC_INTERRUPT, 8);
+    }
     r=*EMMC_INTERRUPT;
-    if(cnt<=0 || (r & INT_CMD_TIMEOUT) || (r & INT_DATA_TIMEOUT) ) { *EMMC_INTERRUPT=r; return SD_TIMEOUT; } else
-    if(r & INT_ERROR_MASK) { *EMMC_INTERRUPT=r; return SD_ERROR; }
+    printf("\n");
+    if(cnt<=0 || (r & INT_CMD_TIMEOUT) || (r & INT_DATA_TIMEOUT) ) {
+        printf("cnt %d\n", cnt); printf("b1 %d\n", r); *EMMC_INTERRUPT=r; return SD_TIMEOUT; } else
+    if(r & INT_ERROR_MASK) {  printf("b2\n"); *EMMC_INTERRUPT=r; return SD_ERROR; }
     *EMMC_INTERRUPT=mask;
     return 0;
 }
@@ -186,7 +192,7 @@ int sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num)
 {
     int r,c=0,d;
     if(num<1) num=1;
-    //printf("sd_readblock lba ");printf("%lx\n",lba);printf(" num ");printf("%lx\n",num);printf("\n");
+    printf("sd_readblock lba ");printf("%lx\n",lba);printf(" num ");printf("%lx\n",num);printf("\n");
     if(sd_status(SR_DAT_INHIBIT)) {sd_err=SD_TIMEOUT; return 0;}
     unsigned int *buf=(unsigned int *)buffer;
     if(sd_scr[0] & SCR_SUPP_CCS) {
@@ -224,7 +230,7 @@ int sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num)
 {
     int r,c=0,d;
     if(num<1) num=1;
-    //printf("sd_writeblock lba ");printf("%lx\n", lba);printf(" num ");printf("%lx\n", num);printf("\n");
+    printf("sd_writeblock lba ");printf("%lx\n", lba);printf(" num ");printf("%lx\n", num);printf("\n");
     if(sd_status(SR_DAT_INHIBIT | SR_WRITE_AVAILABLE)) {sd_err=SD_TIMEOUT; return 0;}
     unsigned int *buf=(unsigned int *)buffer;
     if(sd_scr[0] & SCR_SUPP_CCS) {
@@ -277,12 +283,13 @@ int sd_clk(unsigned int f)
     }
     if(sd_hv>HOST_SPEC_V2) d=c; else d=(1<<s);
     if(d<=2) {d=2;s=0;}
-    //printf("sd_clk divisor ");printf("%lx\n",d);printf(", shift ");printf("%lx\n",s);printf("\n");
+    printf("sd_clk divisor ");printf("%lx\n",d);printf(", shift ");printf("%lx\n",s);printf("\n");
     if(sd_hv>HOST_SPEC_V2) h=(d&0x300)>>2;
     d=(((d&0x0ff)<<8)|h);
     *EMMC_CONTROL1=(*EMMC_CONTROL1&0xffff003f)|d; wait_msec(10);
     *EMMC_CONTROL1 |= C1_CLK_EN; wait_msec(10);
     cnt=10000; while(!(*EMMC_CONTROL1 & C1_CLK_STABLE) && cnt--) wait_msec(10);
+    printf("here0\n");
     if(cnt<=0) {
         printf("[KERNEL]ERROR: failed to get stable clock\n");
         return SD_ERROR;
@@ -339,10 +346,13 @@ int emmc_init()
     *EMMC_INT_EN   = 0xffffffff;
     *EMMC_INT_MASK = 0xffffffff;
     sd_scr[0]=sd_scr[1]=sd_rca=sd_err=0;
+    printf("here1\n");
     sd_cmd(CMD_GO_IDLE,0);
+    printf("here2\n");
     if(sd_err) return sd_err;
 
     sd_cmd(CMD_SEND_IF_COND,0x000001AA);
+    printf("here3\n");
     if(sd_err) return sd_err;
     cnt=6; r=0; while(!(r&ACMD41_CMD_COMPLETE) && cnt--) {
         wait_cycles(400);
@@ -362,6 +372,7 @@ int emmc_init()
             return sd_err;
         }
     }
+    printf("here4\n");
     if(!(r&ACMD41_CMD_COMPLETE) || !cnt ) return SD_TIMEOUT;
     if(!(r&ACMD41_VOLTAGE)) return SD_ERROR;
     if(r&ACMD41_CMD_CCS) ccs=SCR_SUPP_CCS;

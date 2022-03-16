@@ -278,10 +278,16 @@ read_super(void)
 	int r;
 	void *blk;
 
+    writef("get in 1 ?\n");
+    int ans = 0;
+    for (int i = 1; i <= 1000000; ++ i)
+        ans += i & 10;
+    writef("%d\n", ans);
 	// Step 1: read super block.
 	if ((r = read_block(1, &blk, 0)) < 0) {
 		user_panic("cannot read superblock: %e", r);
 	}
+    writef("get in 2 ?\n");
 
 	super = blk;
 
@@ -290,7 +296,9 @@ read_super(void)
 		user_panic("bad file system magic number %x %x", super->s_magic, FS_MAGIC);
 	}
 
-	// Step 3: validate disk size.
+    writef("get in 3 ?\n");
+
+    // Step 3: validate disk size.
 	if (super->s_nblocks > DISKMAX / BY2BLK) {
 		user_panic("file system is too large");
 	}

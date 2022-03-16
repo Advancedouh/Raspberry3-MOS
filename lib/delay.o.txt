@@ -1,0 +1,122 @@
+
+delay.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <wait_cycles>:
+   0:	340000c0 	cbz	w0, 18 <wait_cycles+0x18>
+   4:	51000400 	sub	w0, w0, #0x1
+   8:	d503201f 	nop
+   c:	51000400 	sub	w0, w0, #0x1
+  10:	3100041f 	cmn	w0, #0x1
+  14:	54ffffa1 	b.ne	8 <wait_cycles+0x8>  // b.any
+  18:	d65f03c0 	ret
+  1c:	d503201f 	nop
+
+0000000000000020 <wait_msec>:
+  20:	d53be001 	mrs	x1, cntfrq_el0
+  24:	d53be024 	mrs	x4, cntpct_el0
+  28:	d29ef9e3 	mov	x3, #0xf7cf                	// #63439
+  2c:	d343fc21 	lsr	x1, x1, #3
+  30:	f2bc6a63 	movk	x3, #0xe353, lsl #16
+  34:	2a0003e2 	mov	w2, w0
+  38:	f2d374a3 	movk	x3, #0x9ba5, lsl #32
+  3c:	f2e41883 	movk	x3, #0x20c4, lsl #48
+  40:	9bc37c20 	umulh	x0, x1, x3
+  44:	d344fc00 	lsr	x0, x0, #4
+  48:	9b027c00 	mul	x0, x0, x2
+  4c:	d343fc00 	lsr	x0, x0, #3
+  50:	9bc37c00 	umulh	x0, x0, x3
+  54:	8b401080 	add	x0, x4, x0, lsr #4
+  58:	d53be021 	mrs	x1, cntpct_el0
+  5c:	eb01001f 	cmp	x0, x1
+  60:	54ffffc8 	b.hi	58 <wait_msec+0x38>  // b.pmore
+  64:	d65f03c0 	ret
+  68:	d503201f 	nop
+  6c:	d503201f 	nop
+
+0000000000000070 <get_system_timer>:
+  70:	9299fee2 	mov	x2, #0xffffffffffff3008    	// #-53240
+  74:	9299ff63 	mov	x3, #0xffffffffffff3004    	// #-53244
+  78:	f2a7e002 	movk	x2, #0x3f00, lsl #16
+  7c:	f2a7e003 	movk	x3, #0x3f00, lsl #16
+  80:	f2dff002 	movk	x2, #0xff80, lsl #32
+  84:	f2dff003 	movk	x3, #0xff80, lsl #32
+  88:	b9400040 	ldr	w0, [x2]
+  8c:	b9400061 	ldr	w1, [x3]
+  90:	b9400044 	ldr	w4, [x2]
+  94:	6b00009f 	cmp	w4, w0
+  98:	54000060 	b.eq	a4 <get_system_timer+0x34>  // b.none
+  9c:	b9400040 	ldr	w0, [x2]
+  a0:	b9400061 	ldr	w1, [x3]
+  a4:	2a0103e1 	mov	w1, w1
+  a8:	aa008020 	orr	x0, x1, x0, lsl #32
+  ac:	d65f03c0 	ret
+
+00000000000000b0 <wait_msec_st>:
+  b0:	9299fee2 	mov	x2, #0xffffffffffff3008    	// #-53240
+  b4:	9299ff63 	mov	x3, #0xffffffffffff3004    	// #-53244
+  b8:	f2a7e002 	movk	x2, #0x3f00, lsl #16
+  bc:	f2a7e003 	movk	x3, #0x3f00, lsl #16
+  c0:	f2dff002 	movk	x2, #0xff80, lsl #32
+  c4:	f2dff003 	movk	x3, #0xff80, lsl #32
+  c8:	b9400045 	ldr	w5, [x2]
+  cc:	b9400061 	ldr	w1, [x3]
+  d0:	b9400044 	ldr	w4, [x2]
+  d4:	6b0400bf 	cmp	w5, w4
+  d8:	54000060 	b.eq	e4 <wait_msec_st+0x34>  // b.none
+  dc:	b9400044 	ldr	w4, [x2]
+  e0:	b9400061 	ldr	w1, [x3]
+  e4:	2a0103e1 	mov	w1, w1
+  e8:	aa048024 	orr	x4, x1, x4, lsl #32
+  ec:	b4000284 	cbz	x4, 13c <wait_msec_st+0x8c>
+  f0:	9299fee2 	mov	x2, #0xffffffffffff3008    	// #-53240
+  f4:	9299ff65 	mov	x5, #0xffffffffffff3004    	// #-53244
+  f8:	f2a7e002 	movk	x2, #0x3f00, lsl #16
+  fc:	f2a7e005 	movk	x5, #0x3f00, lsl #16
+ 100:	8b204084 	add	x4, x4, w0, uxtw
+ 104:	f2dff002 	movk	x2, #0xff80, lsl #32
+ 108:	f2dff005 	movk	x5, #0xff80, lsl #32
+ 10c:	d503201f 	nop
+ 110:	b9400043 	ldr	w3, [x2]
+ 114:	b94000a1 	ldr	w1, [x5]
+ 118:	b9400040 	ldr	w0, [x2]
+ 11c:	6b00007f 	cmp	w3, w0
+ 120:	54000060 	b.eq	12c <wait_msec_st+0x7c>  // b.none
+ 124:	b9400040 	ldr	w0, [x2]
+ 128:	b94000a1 	ldr	w1, [x5]
+ 12c:	2a0103e1 	mov	w1, w1
+ 130:	aa008020 	orr	x0, x1, x0, lsl #32
+ 134:	eb04001f 	cmp	x0, x4
+ 138:	54fffec3 	b.cc	110 <wait_msec_st+0x60>  // b.lo, b.ul, b.last
+ 13c:	d65f03c0 	ret
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	43434700 	.inst	0x43434700 ; undefined
+   4:	4728203a 	.inst	0x4728203a ; undefined
+   8:	5420554e 	b.al	40ab0 <wait_msec_st+0x40a00>
+   c:	636c6f6f 	.inst	0x636c6f6f ; undefined
+  10:	6e696168 	rsubhn2	v8.8h, v11.4s, v9.4s
+  14:	726f6620 	.inst	0x726f6620 ; undefined
+  18:	65687420 	fnmls	z0.h, p5/m, z1.h, z8.h
+  1c:	702d4120 	adr	x0, 5a843 <wait_msec_st+0x5a793>
+  20:	69666f72 	ldpsw	x18, x27, [x27, #-208]
+  24:	4120656c 	.inst	0x4120656c ; undefined
+  28:	69686372 	ldpsw	x18, x24, [x27, #-192]
+  2c:	74636574 	.inst	0x74636574 ; undefined
+  30:	20657275 	.inst	0x20657275 ; undefined
+  34:	332e3031 	.inst	0x332e3031 ; undefined
+  38:	3230322d 	orr	w13, w17, #0x1fff0000
+  3c:	37302e31 	tbnz	w17, #6, 600 <wait_msec_st+0x550>
+  40:	72612820 	.inst	0x72612820 ; undefined
+  44:	30312d6d 	adr	x13, 625f1 <wait_msec_st+0x62541>
+  48:	2939322e 	stp	w14, w12, [x17, #-56]
+  4c:	30312029 	adr	x9, 62451 <wait_msec_st+0x623a1>
+  50:	312e332e 	adds	w14, w25, #0xb8c
+  54:	32303220 	orr	w0, w17, #0x1fff0000
+  58:	32363031 	orr	w17, w1, #0x7ffc00
+  5c:	Address 0x000000000000005c is out of bounds.
+

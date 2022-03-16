@@ -35,6 +35,9 @@ QEMUOPTS      := -drive file=target/fs.img,if=sd,format=raw -serial stdio
 
 all: $(modules) build
 
+image:
+	$(MAKE) --directory=./fs/ image
+
 build: $(modules)
 	$(LD) -nostdlib $(objects) -T $(link_script) -o $(kernel_elf)
 	$(OBJCOPY) -O binary $(kernel_elf) $(kernel_img)
@@ -56,7 +59,7 @@ gdb: $(kernel_img)
 qemu-gdb: $(kernel_img)
 	$(QEMU) -M raspi3 -kernel $(kernel_img) -nographic -drive file=target/fs.img,if=sd,format=raw -s -S
 
-run: clean all
+run:
 	$(QEMU) -M raspi3 -kernel $(kernel_img) $(QEMUOPTS)
 
 int: clean all

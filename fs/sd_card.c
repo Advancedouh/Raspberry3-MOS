@@ -6,6 +6,9 @@
 #include <printf.h>
 #include "../user/lib.h"
 
+#define sec_offset (2048 + 3000000)
+//#define sec_offset 0
+
 // Overview:
 // 	read data from IDE disk. First issue a read request through
 // 	disk register and then copy data from disk buffer
@@ -25,11 +28,11 @@ void
 sd_read(u32 secno, void *dst, u32 nsecs)
 {
 	// 0x200: the size of a sector: 512 bytes.
-    u64 current_section = secno;
-    u64 end_section = secno + nsecs;
+    u64 current_section = secno + sec_offset;
+    u64 end_section = secno + nsecs + sec_offset;
 	u64 offset = 0;
 
-	//writef("@@@@@@@@@@@@@read sd section num: %d\n", secno);
+	writef("@@@@@@@@@@@@@read sd section num: %d\n", current_section);
 
 	while (current_section < end_section) {
 		if (syscall_read_sd((u64)(dst + offset), current_section) < 0)
@@ -59,8 +62,8 @@ sd_read(u32 secno, void *dst, u32 nsecs)
 void
 sd_write(u32 secno, void *src, u32 nsecs)
 {
-    u64 current_section = secno;
-    u64 end_section = secno + nsecs;
+    u64 current_section = secno + sec_offset;
+    u64 end_section = secno + nsecs + sec_offset;
 	u64 offset = 0;
 
 	//writef("@@@@@@@@@@@@@write sd section num: %d\n", secno);

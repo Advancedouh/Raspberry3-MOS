@@ -1,0 +1,171 @@
+
+printf.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <myoutput>:
+   0:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+   4:	910003fd 	mov	x29, sp
+   8:	a90153f3 	stp	x19, x20, [sp, #16]
+   c:	2a0203f4 	mov	w20, w2
+  10:	f90013f5 	str	x21, [sp, #32]
+  14:	aa0103f5 	mov	x21, x1
+  18:	7100045f 	cmp	w2, #0x1
+  1c:	54000300 	b.eq	7c <myoutput+0x7c>  // b.none
+  20:	7100005f 	cmp	w2, #0x0
+  24:	5400024d 	b.le	6c <myoutput+0x6c>
+  28:	39400020 	ldrb	w0, [x1]
+  2c:	d2800013 	mov	x19, #0x0                   	// #0
+  30:	14000006 	b	48 <myoutput+0x48>
+  34:	91000673 	add	x19, x19, #0x1
+  38:	94000000 	bl	0 <printcharc>
+  3c:	6b13029f 	cmp	w20, w19
+  40:	5400016d 	b.le	6c <myoutput+0x6c>
+  44:	38736aa0 	ldrb	w0, [x21, x19]
+  48:	7100281f 	cmp	w0, #0xa
+  4c:	54ffff41 	b.ne	34 <myoutput+0x34>  // b.any
+  50:	528001a0 	mov	w0, #0xd                   	// #13
+  54:	94000000 	bl	0 <printcharc>
+  58:	38736aa0 	ldrb	w0, [x21, x19]
+  5c:	91000673 	add	x19, x19, #0x1
+  60:	94000000 	bl	0 <printcharc>
+  64:	6b13029f 	cmp	w20, w19
+  68:	54fffeec 	b.gt	44 <myoutput+0x44>
+  6c:	a94153f3 	ldp	x19, x20, [sp, #16]
+  70:	f94013f5 	ldr	x21, [sp, #32]
+  74:	a8c37bfd 	ldp	x29, x30, [sp], #48
+  78:	d65f03c0 	ret
+  7c:	39400020 	ldrb	w0, [x1]
+  80:	35fffd60 	cbnz	w0, 2c <myoutput+0x2c>
+  84:	a94153f3 	ldp	x19, x20, [sp, #16]
+  88:	f94013f5 	ldr	x21, [sp, #32]
+  8c:	a8c37bfd 	ldp	x29, x30, [sp], #48
+  90:	d65f03c0 	ret
+
+0000000000000094 <printf>:
+  94:	a9af7bfd 	stp	x29, x30, [sp, #-272]!
+  98:	90000008 	adrp	x8, 0 <myoutput>
+  9c:	aa0003ea 	mov	x10, x0
+  a0:	910003fd 	mov	x29, sp
+  a4:	910343eb 	add	x11, sp, #0xd0
+  a8:	910443ec 	add	x12, sp, #0x110
+  ac:	f9400100 	ldr	x0, [x8]
+  b0:	128006e9 	mov	w9, #0xffffffc8            	// #-56
+  b4:	12800fe8 	mov	w8, #0xffffff80            	// #-128
+  b8:	a90333ec 	stp	x12, x12, [sp, #48]
+  bc:	f90023eb 	str	x11, [sp, #64]
+  c0:	290923e9 	stp	w9, w8, [sp, #72]
+  c4:	a94337ec 	ldp	x12, x13, [sp, #48]
+  c8:	a90137ec 	stp	x12, x13, [sp, #16]
+  cc:	a94427e8 	ldp	x8, x9, [sp, #64]
+  d0:	a90227e8 	stp	x8, x9, [sp, #32]
+  d4:	3d8017e0 	str	q0, [sp, #80]
+  d8:	3d801be1 	str	q1, [sp, #96]
+  dc:	3d801fe2 	str	q2, [sp, #112]
+  e0:	3d8023e3 	str	q3, [sp, #128]
+  e4:	3d8027e4 	str	q4, [sp, #144]
+  e8:	3d802be5 	str	q5, [sp, #160]
+  ec:	3d802fe6 	str	q6, [sp, #176]
+  f0:	3d8033e7 	str	q7, [sp, #192]
+  f4:	a90d8be1 	stp	x1, x2, [sp, #216]
+  f8:	aa0a03e2 	mov	x2, x10
+  fc:	d2800001 	mov	x1, #0x0                   	// #0
+ 100:	a90e93e3 	stp	x3, x4, [sp, #232]
+ 104:	910043e3 	add	x3, sp, #0x10
+ 108:	a90f9be5 	stp	x5, x6, [sp, #248]
+ 10c:	f90087e7 	str	x7, [sp, #264]
+ 110:	94000000 	bl	0 <lp_Print>
+ 114:	a8d17bfd 	ldp	x29, x30, [sp], #272
+ 118:	d65f03c0 	ret
+ 11c:	d503201f 	nop
+	...
+ 128:	d503201f 	nop
+ 12c:	d503201f 	nop
+
+0000000000000130 <_panic>:
+ 130:	a9af7bfd 	stp	x29, x30, [sp, #-272]!
+ 134:	9000000a 	adrp	x10, 0 <myoutput>
+ 138:	aa0003e9 	mov	x9, x0
+ 13c:	910003fd 	mov	x29, sp
+ 140:	f9400140 	ldr	x0, [x10]
+ 144:	2a0103e8 	mov	w8, w1
+ 148:	910383ea 	add	x10, sp, #0xe0
+ 14c:	a90e93e3 	stp	x3, x4, [sp, #232]
+ 150:	910443e3 	add	x3, sp, #0x110
+ 154:	aa0903e1 	mov	x1, x9
+ 158:	128004e9 	mov	w9, #0xffffffd8            	// #-40
+ 15c:	f9000bf3 	str	x19, [sp, #16]
+ 160:	aa0203f3 	mov	x19, x2
+ 164:	2a0803e2 	mov	w2, w8
+ 168:	12800fe8 	mov	w8, #0xffffff80            	// #-128
+ 16c:	a9040fe3 	stp	x3, x3, [sp, #64]
+ 170:	f9002bea 	str	x10, [sp, #80]
+ 174:	b9005be9 	str	w9, [sp, #88]
+ 178:	b9005fe8 	str	w8, [sp, #92]
+ 17c:	3d801be0 	str	q0, [sp, #96]
+ 180:	3d801fe1 	str	q1, [sp, #112]
+ 184:	3d8023e2 	str	q2, [sp, #128]
+ 188:	3d8027e3 	str	q3, [sp, #144]
+ 18c:	3d802be4 	str	q4, [sp, #160]
+ 190:	3d802fe5 	str	q5, [sp, #176]
+ 194:	3d8033e6 	str	q6, [sp, #192]
+ 198:	3d8037e7 	str	q7, [sp, #208]
+ 19c:	a90f9be5 	stp	x5, x6, [sp, #248]
+ 1a0:	f90087e7 	str	x7, [sp, #264]
+ 1a4:	94000000 	bl	94 <printf>
+ 1a8:	90000000 	adrp	x0, 0 <myoutput>
+ 1ac:	aa1303e2 	mov	x2, x19
+ 1b0:	a9441fe6 	ldp	x6, x7, [sp, #64]
+ 1b4:	910083e3 	add	x3, sp, #0x20
+ 1b8:	a94517e4 	ldp	x4, x5, [sp, #80]
+ 1bc:	d2800001 	mov	x1, #0x0                   	// #0
+ 1c0:	f9400000 	ldr	x0, [x0]
+ 1c4:	a9021fe6 	stp	x6, x7, [sp, #32]
+ 1c8:	a90317e4 	stp	x4, x5, [sp, #48]
+ 1cc:	94000000 	bl	0 <lp_Print>
+ 1d0:	90000000 	adrp	x0, 0 <myoutput>
+ 1d4:	f9400000 	ldr	x0, [x0]
+ 1d8:	94000000 	bl	94 <printf>
+ 1dc:	14000000 	b	1dc <_panic+0xac>
+	...
+
+Disassembly of section .rodata.str1.8:
+
+0000000000000000 <.rodata.str1.8>:
+   0:	696e6170 	ldpsw	x16, x24, [x11, #-144]
+   4:	74612063 	.inst	0x74612063 ; undefined
+   8:	3a732520 	.inst	0x3a732520 ; undefined
+   c:	203a6425 	.inst	0x203a6425 ; undefined
+	...
+  18:	Address 0x0000000000000018 is out of bounds.
+
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	43434700 	.inst	0x43434700 ; undefined
+   4:	4728203a 	.inst	0x4728203a ; undefined
+   8:	5420554e 	b.al	40ab0 <_panic+0x40980>
+   c:	636c6f6f 	.inst	0x636c6f6f ; undefined
+  10:	6e696168 	rsubhn2	v8.8h, v11.4s, v9.4s
+  14:	726f6620 	.inst	0x726f6620 ; undefined
+  18:	65687420 	fnmls	z0.h, p5/m, z1.h, z8.h
+  1c:	702d4120 	adr	x0, 5a843 <_panic+0x5a713>
+  20:	69666f72 	ldpsw	x18, x27, [x27, #-208]
+  24:	4120656c 	.inst	0x4120656c ; undefined
+  28:	69686372 	ldpsw	x18, x24, [x27, #-192]
+  2c:	74636574 	.inst	0x74636574 ; undefined
+  30:	20657275 	.inst	0x20657275 ; undefined
+  34:	332e3031 	.inst	0x332e3031 ; undefined
+  38:	3230322d 	orr	w13, w17, #0x1fff0000
+  3c:	37302e31 	tbnz	w17, #6, 600 <_panic+0x4d0>
+  40:	72612820 	.inst	0x72612820 ; undefined
+  44:	30312d6d 	adr	x13, 625f1 <_panic+0x624c1>
+  48:	2939322e 	stp	w14, w12, [x17, #-56]
+  4c:	30312029 	adr	x9, 62451 <_panic+0x62321>
+  50:	312e332e 	adds	w14, w25, #0xb8c
+  54:	32303220 	orr	w0, w17, #0x1fff0000
+  58:	32363031 	orr	w17, w1, #0x7ffc00
+  5c:	Address 0x000000000000005c is out of bounds.
+

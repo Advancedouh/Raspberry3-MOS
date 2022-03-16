@@ -294,6 +294,7 @@ void sys_write_sd(int sysno, u64* va, u32 secno)
  * Hint: Use ummapped segment in kernel address space to perform MMIO.
  */
 void sys_read_sd(int sysno, u64* va, u32 secno) {
+    printf("test: %x, %d\n", va, secno);
 	if (va >= KERNBASE) {
 		(*TRAPSP)->regs[0] = -E_INVAL;
 		return;
